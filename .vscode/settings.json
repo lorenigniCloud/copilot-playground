@@ -13,8 +13,5 @@
   "github.copilot.editor.enableAutoCompletions": true,
   "typescript.preferences.includePackageJsonAutoImports": "auto",
   "typescript.suggest.autoImports": true,
-  "files.exclude": {
-    "**/.next": true,
-    "**/node_modules": true
-  }
+ 
 }
