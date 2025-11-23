@@ -1,0 +1,5 @@
+- fare un instruction file dedicato alla CI/CL github flow
+- fare una sezione librerie su react.instructions
+- fare una sezione react pattern su react.instructions
+- fare un file per style css
+- fornire struttura assodata della directory in copilot-instructions

@@ -41,6 +41,8 @@ Usali nella chat per azioni specifiche:
 - `/commitmessage` - Genera messaggio commit dalle diff
 - `/terminal` - Genera comandi shell
 - `/file` - Legge e analizza un file intero
+- `@web` - Cerca informazioni sul web con fonti affidabili
+- `@docs` - Riferisce alla documentazione ufficiale del progetto
 
 ## 🔧 Quick Fix & Actions
 
@@ -95,19 +97,59 @@ Usali nella chat per azioni specifiche:
 - Best practices
 ```
 
-### Come Usare i Template:
+## 🧭 Istruzioni personalizzate del repository (GitHub Copilot)
 
-1. **Crea** il template `.md` nella cartella `.vibe/`
-2. **Apri l'anteprima** con `Ctrl/Cmd+Shift+V`
-3. **Seleziona sezioni** e usa `Ctrl/Cmd+I` per farle completare da Copilot
-4. **Copia risultati** nella chat per generare codice coerente
+Le “repository custom instructions” permettono di dare a Copilot linee guida persistenti per questo progetto.
+
+Tipi supportati:
+
+- Istruzioni di repository: `.github/copilot-instructions.md` (si applicano a tutto il repo)
+- Istruzioni per percorso: `.github/instructions/NAME.instructions.md` con frontmatter `applyTo` per definire i file interessati
+- Istruzioni per agenti: `AGENTS.md` vicino al codice a cui si riferiscono (opzionale)
+
+Esempi pratici:
+
+1. Istruzioni globali del progetto
+
+```
+# File: .github/copilot-instructions.md
+
+# docs/references/nextjs-resources.md
+
+## Next.js Resources
+
+- [Next.js Docs](https://nextjs.org/docs)
+```
+
+2. Regole per file TypeScript e React
+
+```markdown
+# File: .github/instructions/typescript.instructions.md
+
+---
+
+## applyTo: "**/\*.ts,**/\*.tsx"
+
+- Usare tipi espliciti per props e return.
+- Evitare any; preferire generics.
+- Componenti React: usare memo solo quando necessario; evitare re-render superflui.
+```
+
+Note utili:
+
+- Le istruzioni vengono automaticamente incluse nelle richieste di Copilot Chat fatte nel contesto del repository.
+- Priorità: personali > repository > organizzazione; quando possibile evita conflitti.
+- Puoi abilitare/disabilitare l’uso delle istruzioni dal pannello Chat su GitHub.
+
+Riferimento ufficiale: “Adding repository custom instructions for GitHub Copilot” (docs.github.com).
+Poi usa: `@docs:references/react-patterns Come creare un custom hook?`
 
 ## 🔄 Workflow Ottimizzato
 
-### 1. Pianificazione (Template-First)
+### 1. Pianificazione (Istruzioni-First)
 
 ```
-Template .md → Copilot completion → Refine → Apply to code
+Aggiorna `.github/copilot-instructions.md` → Lavora con Copilot → Verifica → Documenta miglioramenti
 ```
 
 ### 2. Sviluppo (Context-Aware)
@@ -171,6 +213,20 @@ Git changes → Chat → /commitmessage → Review → Use
 
 ❌ "Aggiungi test"
 ✅ "Genera test Jest per questa funzione, includi edge cases e mock delle dipendenze"
+
+❌ "Come si fa authentication?"
+✅ "@web Best practices per JWT authentication in Next.js con TypeScript"
+
+❌ "Errore nel build"
+✅ "@web Next.js build error: 'Module not found' con TypeScript + seleziona stack trace"
+```
+
+### 5. **Prompt con Web Research**
+
+```
+@web + specificity: "@web Come ottimizzare bundle size in Next.js 14 con App Router"
+@web + context: "@web Migrazione da Create React App a Next.js mantenendo TypeScript"
+@web + troubleshooting: "@web Risolvere conflitti di dipendenze con pnpm workspaces"
 ```
 
 ## 🚀 Shortcut Rapidi
@@ -183,6 +239,8 @@ Git changes → Chat → /commitmessage → Review → Use
 | Prossimo Suggestion | `Alt+]`             | Naviga opzioni       |
 | Quick Fix           | `Ctrl/Cmd+.`        | Azioni contestuali   |
 | Terminal Command    | `/terminal` in chat | Comandi shell        |
+| Web Search          | `@web` in chat      | Ricerca con fonti    |
+| Docs Reference      | `@docs` in chat     | Documentazione       |
 
 ## 🔍 Debugging con Copilot
 
@@ -213,10 +271,10 @@ Git changes → Chat → /commitmessage → Review → Use
 
 In questo progetto puoi sperimentare:
 
-1. **Template nella cartella `.vibe/`** - Modifica e usa per nuove feature
+1. **Istruzioni del repository** - Aggiungi `.github/copilot-instructions.md` e prova l’effetto in Copilot Chat
 2. **Componenti React** - Genera nuovi componenti con Copilot
 3. **Utility functions** - Crea helpers con documentazione auto-generata
 4. **Test automatici** - Usa `/tests` sui componenti esistenti
 5. **Commit messages** - Prova `/commitmessage` sulle tue modifiche
 
-**Prossimo step**: Prova a creare un nuovo componente usando prima un template `.md`, poi lascia che Copilot generi il codice!
+**Prossimo step**: Aggiungi `.github/copilot-instructions.md` con build, test e struttura del progetto; poi crea un nuovo componente con l’aiuto di Copilot!

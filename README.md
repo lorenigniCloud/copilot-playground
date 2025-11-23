@@ -1,6 +1,6 @@
 # 🎪 Copilot Playground - Next.js + TypeScript
 
-Un playground strutturato per sperimentare con GitHub Copilot usando il metodo **Vibe Coding** con template Markdown.
+Un playground pratico per sperimentare GitHub Copilot in VS Code con Next.js + TypeScript.
 
 ## 🚀 Quick Start
 
@@ -23,17 +23,13 @@ copilot-playground/
 │   └── page.tsx         # Homepage
 ├── 📁 components/       # Componenti React riusabili
 │   └── ExampleComponent.tsx
-├── 📁 docs/            # Documentazione
+├── 📁 docs/             # Documentazione
 │   └── Copilot-Guida.md # Guida completa Copilot
-├── 📁 .vibe/           # Template per Vibe Coding
-│   ├── README.md       # Come usare i template
-│   ├── template-progetto.md
-│   ├── template-refactor.md
-│   ├── template-tests.md
-│   └── template-commit.md
 └── 📁 .vscode/         # Configurazione VS Code
     ├── extensions.json  # Extensions raccomandate
     └── settings.json    # Settings Copilot-ready
+
+Suggerito (opzionale): aggiungi una cartella `.github/` con `copilot-instructions.md` per le istruzioni personalizzate del repository.
 ```
 
 ## 🎯 Cosa Puoi Sperimentare
@@ -45,22 +41,20 @@ copilot-playground/
 - **Slash Commands**: `/explain`, `/tests`, `/fix`, `/refactor`
 - **Quick Actions**: `Ctrl/Cmd+.` per azioni contestuali
 
-### 2. 📝 Vibe Coding Templates
+### 2. 🧭 Istruzioni personalizzate del repository (Consigliato)
 
-- **Pianificazione**: Usa `template-progetto.md` per nuove feature
-- **Refactoring**: Migliora codice con `template-refactor.md`
-- **Testing**: Genera test con `template-tests.md`
-- **Commit**: Messaggi strutturati con `template-commit.md`
+- Crea `.github/copilot-instructions.md` con linee guida su build, test, run e struttura del progetto.
+- Per aree specifiche, usa `.github/instructions/NAME.instructions.md` con frontmatter `applyTo` per associare i file interessati.
+- Queste istruzioni vengono automaticamente usate da Copilot Chat quando lavori nel repo.
 
 ### 3. ⚡ Workflow Ottimizzato
 
 ```bash
 # Workflow tipico
-1. Copia template da .vibe/
-2. Compila con Copilot (Ctrl/Cmd+I)
-3. Genera codice dalla specifica
-4. Testa e itera
-5. Commit strutturato
+1. Scrivi/aggiorna `.github/copilot-instructions.md` (build, test, run, lint)
+2. Lavora con Copilot (inline + chat) sui file del progetto
+3. Usa `/tests`, `/fix`, `/refactor` per accelerare
+4. Verifica in locale (dev/build) e committa
 ```
 
 ## 🛠️ Scripts Disponibili
@@ -77,57 +71,45 @@ pnpm lint        # Lint con ESLint
 ### 1. Prima Esperienza - Componente Semplice
 
 ```bash
-# 1. Copia template
-cp .vibe/template-progetto.md .vibe/mio-primo-componente.md
-
-# 2. Apri e compila il template
-code .vibe/mio-primo-componente.md
-
-# 3. Usa Ctrl/Cmd+I per far completare le sezioni a Copilot
-
-# 4. Crea il componente:
-# - Seleziona la specifica completa
-# - Invia a Copilot Chat: "Genera componente React TypeScript"
-# - Salva in components/MioPrimoComponente.tsx
-
-# 5. Aggiungi al page.tsx e testa
+# 1. Apri `components/`
+# 2. In Copilot Chat: "Genera un componente React TS che mostra un contatore con + e -"
+# 3. Incolla il codice in `components/Counter.tsx`
+# 4. Importa e usa il componente in `app/page.tsx`
+# 5. Avvia: pnpm dev
 ```
 
 ### 2. Secondo Esperimento - Refactoring
 
 ```bash
-# 1. Analizza ExampleComponent.tsx esistente
-# Seleziona il codice → /explain in chat
-
-# 2. Copia template refactor
-cp .vibe/template-refactor.md .vibe/refactor-example.md
-
-# 3. Compila problemi identificati e soluzioni
-
-# 4. Applica refactoring guidato
-# Seleziona codice → /refactor → applica suggerimenti
-
-# 5. Testa che tutto funzioni ancora
+# 1. Analizza `components/ExampleComponent.tsx`
+# 2. Seleziona il codice → /explain in chat
+# 3. Chiedi: "/refactor elimina re-render inutili e aggiungi prop types chiari"
+# 4. Applica e verifica con pnpm dev
 ```
 
 ### 3. Terzo Esperimento - Testing
 
 ```bash
 # 1. Seleziona una funzione/componente
-# 2. Usa /tests in chat per generazione automatica
-# 3. Per casi complessi, usa template-tests.md
-# 4. Implementa test mancanti
-# 5. Verifica con pnpm test (quando configurato)
+# 2. Usa /tests in chat per generare test (Jest/RTL)
+# 3. Integra la suite ed esegui con pnpm test (quando configurato)
 ```
 
 ## 🎨 Personalizzazione
 
-### Aggiungere Nuovi Template
+### Istruzioni personalizzate (dove metterle)
 
-```bash
-# Crea nuovo template in .vibe/
-cp .vibe/template-progetto.md .vibe/template-api.md
-# Personalizza per API design, database schema, etc.
+Se vuoi guidare Copilot nel tuo repository:
+
+- Crea `.github/copilot-instructions.md` per le regole generali del progetto.
+- Crea `.github/instructions/NAME.instructions.md` con:
+
+```markdown
+---
+applyTo: "**/*.ts,**/*.tsx"
+---
+
+Linee guida specifiche per TypeScript e React...
 ```
 
 ### Configurare Extensions Utili
@@ -151,7 +133,6 @@ Modifica `.vscode/settings.json` per:
 ### 📖 Documentazione Locale
 
 - `docs/Copilot-Guida.md` - Guida completa in italiano
-- `.vibe/README.md` - Come usare i template
 
 ### 🔗 Link Utili
 
