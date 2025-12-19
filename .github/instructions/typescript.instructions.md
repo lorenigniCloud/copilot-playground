@@ -9,7 +9,7 @@ Follow these when editing or creating `.ts`/`.tsx` files. Keep changes minimal a
 ## TypeScript
 
 - Prefer explicit types for exported functions, public props, and returns.
-- Avoid `any`, `unknown` and `never`; prefer generics or exact types.
+- Avoid `any`, `unknown` and `never`; prefer generics if you have to exact types on incoming variable with union types or in case of default value managment.
 - Prefer string literal unions over `enum` unless interop requires `enum`.
 - Use `type` aliases for React props and utility types; use `interface` only when you need declaration merging or extension.
 - Narrow early; use user-defined type guards when helpful.
@@ -21,6 +21,13 @@ Follow these when editing or creating `.ts`/`.tsx` files. Keep changes minimal a
 - Avoid using `Object` type; prefer `Record<string, unknown>` or specific types.
 - Avoid using the `Function` type; prefer specific function signatures.
 - Avoid using nested ternary operators for complex logic. Extract them in separate statements instead.
+- Event types: declare precise React types on EventHandler (e.g., `React.ChangeEvent<HTMLInputElement>`).
+- Use absolute imports using the `@/` alias.
+- Exported function with explicit return type:
+
+[[__! verificare]]
+
+- use coalascing operator for accessing in property (verificare se e con quali impostazioni di ts.config avviene questo comportamento)
 
 ## Error handling & logging
 

@@ -2,80 +2,118 @@
 applyTo: "**/*.ts,**/*.tsx"
 ---
 
-## React (TSX)
+# React & Next.js Development Standards
 
-- Component naming: PascalCase; file name matches exported component.
-- Callback definition for Components
-- Prefer named exports over default to aid refactors.
-- Props: define `interface Props { ... }`; avoid `React.FC` unless children typing is explicitly needed.
-- Event types: use precise React types (e.g., `React.ChangeEvent<HTMLInputElement>`).
-- State: type explicitly when inference is unclear; initialize with sensible defaults.
-- Effects: include complete dependency arrays; add cleanup where appropriate; avoid doing data transforms in `render` that can be memoized.
-- Memoization: use `useCallback`/`useMemo` for expensive work or stable deps; don’t overuse—measure if re-renders are an issue.
-- Accessibility: ensure interactive elements are keyboard-accessible and labeled (aria-\* as needed).
-- Lift state up when needed and pass setter function down to components.
-- Create reusable components/hooks for repeated patterns; avoid passing entire object types as props, until necessary.
-- Reuse same components for visualization and editing when possible (e.g., a `UserCard` used in both view and edit modes).
+## 1. Component Structure & Naming
 
-## Imports & style
+### Component Basics
 
-- Keep import paths relative and consistent; group React, libs, then local modules.
-- No wildcard (`* as`) imports for React; use `import React from 'react'` only when required by tooling.
-- Keep formatting consistent (Prettier/ESLint). Do not reformat unrelated files.
+- **Component Naming**: Use PascalCase; file name must match exported component
+- **Props Destructuring**: Apply destructuring of props only inside the components, not in the incoming prop parameter definition
+- **Component Declaration**: Use `const ExampleComponent = () => { ... }` pattern; avoid `React.FC` unless children typing is explicitly needed
+- **Props Interface**: Define `interface ExampleComponentProps { ... }` for props typing without React.FC
 
-## Examples
+### Component Creation & Management
 
-- Exported function with explicit return type:
+- **Component Reusability**: Frequently consider creating new components, but always check the `core-components` folder first to avoid useless duplicates or rigidity
+- **Props Abstraction**: When creating a component, avoid passing entire object types as props until necessary - maintain abstraction
+- **Core Components Modification**: Always check if a component is included in the core-components list (specified in `instruction/core-components/project-components-instructions` file). Modifications to core-components must be discussed and agreed upon first
+- **Modification Tracking**: Track all modifications to core components in `instruction/core-components/components-modification-instructions.md` with count and description
+- **Pattern Adherence**: Follow patterns specified in `instruction/core-components/patterns-instructions.md` when working with core components
 
-```ts
-export const formatDateISO = (d: Date): string => {
-  return d.toISOString();
-};
-```
+## 2. Client Components
 
-- Props typing without React.FC:
+### State & Hooks Management
 
-```tsx
-interface ButtonProps {
-  label: string;
-  onClick?: () => void;
-  disabled?: boolean;
-}
+- **Hooks Ordering**: States and custom hooks must be ordered at the beginning of the component following best practices
 
-export const Button = ({ label, onClick, disabled }: ButtonProps) => {
-  return (
-    <button type="button" onClick={onClick} disabled={disabled}>
-      {label}
-    </button>
-  );
-};
-export default Button;
-```
+  _[[[ Question on Client Components section - To be asked at the beginning of the project]]]_
 
-- Pass setter functions as props:
+### Security & Data Handling
 
-```tsx
-interface ParentComponentProps {
-  initialCount: number;
-}
+- **Data Encryption**: When fetching data from client or sending server action data from a client component, encrypt sensitive parameters you send and decrypt those you receive from the backend
+- **Client-Side Fetching**: Always question if it's meaningful to fetch data on the client
 
-export const ParentComponent = ({ initialCount }: ParentComponentProps) => {
-  const [count, setCount] = useState(initialCount);
+### Performance & Effects
 
-  return <ChildComponent count={count} setCount={setCount} />;
-};
+- **Effects Limitation**: Avoid creating client components with many effects
+- **Rerender Optimization**: Limit rerenders as much as possible
+- **Dependency Arrays**: Effects must include complete dependency arrays when needed
+- **Cleanup Functions**: Add cleanup functions in effects where appropriate (e.g., for event listener closure)
+- **Memoization**: Use `useCallback`/`useMemo` for expensive work or stable dependencies; don't overuse—measure if re-renders are an issue
 
-interface ChildComponentProps {
-  count: number;
-  setCount: (count: number) => void;
-}
+### Component Patterns
 
-export const ChildComponent = ({ count, setCount }: ChildComponentProps) => {
-  return (
-    <div>
-      <p>Count: {count}</p>
-      <button onClick={() => setCount(count + 1)}>Increment</button>
-    </div>
-  );
-};
-```
+- **Dual-Purpose Components**: Reuse same components for visualization and editing actions when possible (e.g., a `UserCard` could contain a button that activates fields for editing)
+- **Complex State Management**: For data state management of multiple actions (delete, modify, archive) belonging to the same component, use the `useReducer` hook instead of multiple `useState` hooks
+- **Form State Management**: When using forms, pass the setter function as props to the field of the form component, so that the form component state can be updated by the child component easily
+
+## 3. Server Components
+
+### Architecture Principles
+
+- **Nested Server Components**: Creating more server components nested inside each other, especially with server wrappers (when there's no event handler need), leads to separation of concerns - a welcome principle
+- **Data Fetching**: With data fetching, always prefer React Server Components (RSC)
+
+## 4. UX/UI Standards
+
+### Accessibility & Design
+
+- **Accessibility**: Ensure interactive elements are keyboard-accessible and labeled (use `aria-*` attributes as needed)
+- **Responsive Design**: Ensure components have responsive design (using CSS Modules, styled-components, etc.)
+
+## 5. Code Style & Imports
+
+### Import Organization
+
+- **Import Paths**: Keep import paths relative and consistent; group React imports, then libraries, then local modules
+- **Code Formatting**: Keep formatting consistent (Prettier/ESLint). Do not reformat unrelated files
+
+## 6. Project Libraries
+
+### Core Libraries
+
+- **Zustand**: For state management
+- **React Hook Form**: For form handling
+- **Zod**: For data validation
+- **Nuqs**: For syncing state with the URL
+- **Tanstack Query**: For data fetching and caching
+
+### Testing & UI
+
+_[[[ Question on Testing - To be asked at the beginning of the project]]]_
+
+- **React Testing Library and Jest**: For testing
+
+_[[[ Question on Shadcn/UI - To be asked at the beginning of the project]]]_
+
+- **Shadcn**: For faster prototyping and consistent design
+
+## 7. Next.js App Router Architecture
+
+### Directory Structure & Colocation
+
+- **Route Groups**: Use parentheses `(groupname)` to organize routes logically without affecting the URL path
+- **Private Folders**: Prefix folders with an underscore `_folder` for very specific components, hooks, or utilities used exclusively within a specific route
+
+### Global Directory Mapping
+
+- **`@/app/*`**: Routing, layouts, and page-specific logic
+- **`@/components/ui/*`**: Low-level, atomic UI components (e.g., buttons, inputs)
+- **`@/components/features/core/*`**: Complex, feature-specific project shared core components
+- **`@/components/features/accessories/*`**: Complex, feature-specific project shared accessories components
+- **`@/lib/*`**: Third-party library configurations (Prisma, Stripe, etc.) and shared utility functions
+- **`@/actions/*`**: Server Actions for data mutations, organized by domain
+- **`@/hooks/*`**: Reusable client-side custom hooks
+- **`@/types/*`**: Global TypeScript definitions and interfaces
+
+### Data Fetching & Mutations
+
+- **Fetching**: Perform data fetching directly in Server Components (Pages or Layouts)
+- **Mutations**: Use Server Actions for all form submissions and data updates. Keep them in an `actions.ts` file within the route folder or in the global `@/actions` folder
+- **Validation**: Use Zod for schema validation within Server Actions
+
+### Naming Conventions
+
+- **Folders**: Use `kebab-case` for all directories in `app/`
+- **Special Files**: Strictly follow Next.js naming conventions: `page.tsx`, `layout.tsx`, `loading.tsx`, `error.tsx`, `not-found.tsx`
