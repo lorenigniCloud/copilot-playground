@@ -78,6 +78,7 @@ applyTo: "**/*.ts,**/*.tsx"
 - **Zod**: For data validation
 - **Nuqs**: For syncing state with the URL
 - **Tanstack Query**: For data fetching and caching
+- **Paraglide**: For iternationalization
 
 ### Testing & UI
 
@@ -117,3 +118,4 @@ _[[[ Question on Shadcn/UI - To be asked at the beginning of the project]]]_
 
 - **Folders**: Use `kebab-case` for all directories in `app/`
 - **Special Files**: Strictly follow Next.js naming conventions: `page.tsx`, `layout.tsx`, `loading.tsx`, `error.tsx`, `not-found.tsx`
+  ut.tsx`, `loading.tsx`, `error.tsx`, `not-found.tsx`
