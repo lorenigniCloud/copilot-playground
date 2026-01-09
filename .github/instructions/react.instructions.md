@@ -46,14 +46,19 @@ applyTo: "**/*.ts,**/*.tsx"
 
 - **Dual-Purpose Components**: Reuse same components for visualization and editing actions when possible (e.g., a `UserCard` could contain a button that activates fields for editing)
 - **Complex State Management**: For data state management of multiple actions (delete, modify, archive) belonging to the same component, use the `useReducer` hook instead of multiple `useState` hooks
+- **useTransition for UX**: Use `useTransition` for state updates that may take time, to keep the UI responsive - specially for routing updates
 - **Form State Management**: When using forms, pass the setter function as props to the field of the form component, so that the form component state can be updated by the child component easily
 
-## 3. Server Components
+## 3. Server/Client Composition Patterns
 
-### Architecture Principles
+### Pagination Pattern (Server-Driven)
 
+- **Server Component**: reads `searchParams.page`, calculates offset, fetches paginated data + total count
+- **Client Component**: receives `totalPages` as prop; uses `useSearchParams()` + `router.replace()` to update URL on navigation
+- **Flow**: URL change → Server Component re-renders with new data (nuqs can help here)
+- **Data Fetching**: With data fetching, prefer React Server Components (RSC)
 - **Nested Server Components**: Creating more server components nested inside each other, especially with server wrappers (when there's no event handler need), leads to separation of concerns - a welcome principle
-- **Data Fetching**: With data fetching, always prefer React Server Components (RSC)
+- **Preload Pattern for Parallel Fetching**: When nested async Server Components fetch independent data, use React 19's `cache()` to prevent waterfall fetching. Wrap data fetching functions with `cache()` and call them without `await` in the parent component to start parallel requests. The child component will reuse the cached Promise. Use this pattern only when you've identified actual waterfalls impacting performance
 
 ## 4. UX/UI Standards
 
