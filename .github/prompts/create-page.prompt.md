@@ -21,9 +21,9 @@ Create a new Next.js page based on the provided Figma design, following strict p
 2. **Component Reuse**: Check the **UI Components** folder for existing components that match the design. Reuse them instead of creating new ones.
    - *Example*: Use `section-title.tsx` if available instead of hardcoding `h2`.
 3. **Text Styles Check**: Before writing any CSS/Tailwind:
-   - Run the process described in the **Typography Style Unification Prompt**.
+   - For **each distinct text style** found in the Figma design (e.g., page title, subtitle, body text, caption), run the full process described in the **Typography Style Unification Prompt** independently.
    - Check **Global Styles** for existing text classes.
-   - If a style exists, use the semantic class name (e.g., `.page-hero-title`).
+   - If a style exists, use the semantic class name (e.g., `.heading-48-semibold`).
    - If missing, create a NEW semantic class in **Global Styles** and use it.
    - **Avoid inline Tailwind for typography** (font-size, weight, line-height, letter-spacing) unless it's a one-off unique element.
 4. **Non-Typography Styles (Lean + Delegated)**:

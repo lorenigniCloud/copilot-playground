@@ -79,10 +79,10 @@ In both cases, focus on creating and maintaining reusable CSS classes.
    Before implementation:
    - Scan `@layer components` in the **Global Styles** file.
    - Compare normalized typography sets against existing classes.
-   - Decision matrix:
-     - **100% exact match**: reuse existing class.
-     - **>= 80% match** with only one minor difference (typically `color` or `text-align`): compose existing class + minimal override.
-     - **< 80% match** or 2+ key differences (`font-size`, `font-weight`, `line-height`, `letter-spacing`, `font-family`): create a new class.
+   - Decision matrix (discrete rules, not percentages):
+     - **Exact match**: all typography properties are identical → reuse existing class.
+     - **Near match**: differs in only one non-structural property (`color`, `text-align`, `text-decoration`) → compose existing class + minimal Tailwind/CSS override for the differing property.
+     - **Structural mismatch**: differs in any of `font-size`, `font-weight`, `font-family`, `line-height`, or `letter-spacing`, or differs in 2+ properties of any kind → create a new class.
 
 6. **Safe Alias/Migration Policy**:
    - Do not auto-rename shared classes by default.
@@ -93,14 +93,21 @@ In both cases, focus on creating and maintaining reusable CSS classes.
    - Rename existing classes only when explicitly requested or when all usages are fully updated with low regression risk.
 
 7. **Change Impact Check (MANDATORY when editing/renaming shared classes)**:
+   - **Trigger**: this step is required whenever the decision matrix results in modifying, renaming, or aliasing an existing class — including in scenario 2 (e.g., renaming a context-specific class to a generic one for cross-page reuse).
    - Run codebase-wide usage search **before and after** changes.
    - Preferred search approach: `grep_search` for class name occurrences.
    - Report all affected files/components.
+   - **Threshold**: if more than 3 files are affected and full migration cannot be verified, prefer creating a new generic class + keeping the old one as-is, over a risky broad rename.
    - If scope is uncertain, prefer creating a new class instead of changing shared behavior.
 
 8. **Naming Strategy**:
-   - **Priority 1 (Generic/Reusable)**: use descriptive names for standard typography levels (e.g., `.heading-48-semibold`, `.text-body-medium-gray`).
-   - **Priority 2 (Component-Specific)**: use scoped names only for decorative, unique, low-reuse styles.
+
+   **Core principle**: always name classes after *what the style looks like*, never after *where it is used*. This prevents rename churn when the same style appears in a different context later.
+
+   - **Priority 1 (Generic/Reusable — default choice)**: use descriptive names based on visual properties (e.g., `.heading-48-semibold`, `.text-body-medium-gray`, `.caption-12-uppercase`). This is the default for all new classes.
+   - **Priority 2 (Component-Specific)**: use scoped names (e.g., `.pricing-hero-decorative`) only for decorative, unique, or provably low-reuse styles that would not make sense outside their original context.
+
+   When in doubt between Priority 1 and Priority 2, always choose Priority 1.
 
 
 ## Required Output
@@ -115,10 +122,13 @@ In both cases, focus on creating and maintaining reusable CSS classes.
    - Provide snippet to add/modify in global CSS.
    - If alias/rename is used, specify old and new class names.
 4. **Component Update**: Show the updated or newly created component code with the correct class applied.
-5. **Risk/Impact Report** (mandatory when shared class behavior changes):
-   - List files/components where the affected class is used.
-   - Include pre/post usage-search summary.
-   - If no other usages are found, state that explicitly.
+5. **Risk/Impact Report**:
+   - **Scenario 1 (style correction)**: always mandatory when an existing shared class is modified or renamed.
+   - **Scenario 2 (dynamic normalization / page creation)**: required only if an existing class was modified or renamed (e.g., renaming a context-specific class to a generic one). If only new classes were created or existing classes reused as-is, this section can be omitted.
+   - When required:
+     - List files/components where the affected class is used.
+     - Include pre/post usage-search summary.
+     - If no other usages are found, state that explicitly.
 
 ## Guardrails
 
