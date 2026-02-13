@@ -11,6 +11,7 @@ tools: ["context7/*"]
 - UI Components: #file:../../components/ui
 - UI Components changes markdown: #file:../../components/ui/changes.md
 - Typography Style Unification Prompt: #file:css-typography-style-unification-guidelines.prompt.md
+- Library Initialization Prompt: #file:library-init-nextjs.prompt.md
 
 ## 1. Component Structure & Naming
 
@@ -52,6 +53,7 @@ tools: ["context7/*"]
 - **Nuqs**: For syncing state with the URL
 - **Tanstack Query**: For data fetching and caching
 - **Next-Intl**: For internationalization
+- **next-themes**: For theme management (light/dark/system)
 
 ## 6. Global Directory Structure & Conventions
 
