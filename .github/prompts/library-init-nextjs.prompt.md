@@ -26,7 +26,6 @@ Work on a Next.js project with App Router and strict TypeScript.
 - **Package manager**: `pnpm`
 - **Default locale**: `{{default_locale}}` (e.g. `it`)
 - **Supported locales**: `{{supported_locales}}` (e.g. `it,en`)
-- **Mode**: `minimal` (default) | `full`
 
 If an input is missing, use the simplest default and state it in the output.
 
@@ -63,7 +62,7 @@ Install only missing packages:
 ### 3) React Hook Form + Zod
 
 - Create a sample util/schema in `lib/validation/` (e.g. `example-form.schema.ts`)
-- Wire `zodResolver` into a minimal client form (only in `full` mode)
+- Wire `zodResolver` into a minimal client form
 - Keep semantic schema naming (`SomethingSchema`)
 
 ### 4) Nuqs
@@ -85,14 +84,14 @@ Install only missing packages:
   - required middleware
   - locale message loading from a dedicated folder (e.g. `messages/`)
 - Use input default locale (`it` if missing)
-- Do not introduce complex structures in `minimal` mode
+- Do not introduce complex structures
 
 ### 7) next-themes
 
 - Create a theme provider in `components/providers/theme-provider.tsx`
 - Wrap the root layout tree with the provider if missing
 - Configure a minimal setup (`attribute`, `defaultTheme`, and system support when appropriate)
-- In `full` mode, add a minimal theme toggle example; skip in `minimal` mode
+- Do not add theme showcase UI
 
 ## Important Constraints
 
@@ -127,4 +126,4 @@ Always return:
    - next-themes: `configured | already-present | skipped`
 5. **Validation outcome** (`lint/build`) with blockers, if any
 
-If mode is `minimal`, stop at technical bootstrap. If mode is `full`, add one minimal usage example for each library.
+Always stop at technical bootstrap only.
