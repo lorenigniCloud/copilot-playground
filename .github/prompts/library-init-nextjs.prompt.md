@@ -22,7 +22,6 @@ Work on a Next.js project with App Router and strict TypeScript.
 
 ## Expected Input
 
-- **Target project root**: `{{project_root}}`
 - **Package manager**: `pnpm`
 - **Default locale**: `{{default_locale}}` (e.g. `it`)
 - **Supported locales**: `{{supported_locales}}` (e.g. `it,en`)
