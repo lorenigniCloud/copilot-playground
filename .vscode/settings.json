@@ -13,5 +13,24 @@
   "github.copilot.editor.enableAutoCompletions": true,
   "typescript.preferences.includePackageJsonAutoImports": "auto",
   "typescript.suggest.autoImports": true,
- 
+  "workbench.colorCustomizations": {
+    "activityBar.activeBackground": "#912aaf",
+    "activityBar.background": "#912aaf",
+    "activityBar.foreground": "#e7e7e7",
+    "activityBar.inactiveForeground": "#e7e7e799",
+    "activityBarBadge.background": "#332b0c",
+    "activityBarBadge.foreground": "#e7e7e7",
+    "commandCenter.border": "#e7e7e799",
+    "sash.hoverBorder": "#912aaf",
+    "statusBar.background": "#6f2086",
+    "statusBar.foreground": "#e7e7e7",
+    "statusBarItem.hoverBackground": "#912aaf",
+    "statusBarItem.remoteBackground": "#6f2086",
+    "statusBarItem.remoteForeground": "#e7e7e7",
+    "titleBar.activeBackground": "#6f2086",
+    "titleBar.activeForeground": "#e7e7e7",
+    "titleBar.inactiveBackground": "#6f208699",
+    "titleBar.inactiveForeground": "#e7e7e799"
+  },
+  "peacock.color": "#6f2086"
 }

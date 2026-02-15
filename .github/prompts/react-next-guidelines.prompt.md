@@ -1,61 +1,76 @@
 ---
 name: react-next-guidelines
-description: This prompt provides guidelines for React and Next.js development, including component structure, naming conventions, UX/UI standards, project libraries, and global directory structure.
+description: Operational standards for React and Next.js development with clear priorities, conventions, and delivery checklist.
 tools: ["context7/*"]
 ---
 
 # React & Next.js Development Standards
 
-## 0. **Context Files**:
+## 0. Priority Order (apply in this order)
+
+1. User request in the current task
+2. Repository instructions and path-specific instructions
+3. This prompt file
+4. Context7 documentation for uncovered or ambiguous topics
+
+When rules conflict, follow the highest-priority source.
+
+## 1. Context Files
 
 - UI Components: #file:../../components/ui
 - UI Components changes markdown: #file:../../components/ui/changes.md
 - Typography Style Unification Prompt: #file:css-typography-style-unification-guidelines.prompt.md
 - Library Initialization Prompt: #file:library-init-nextjs.prompt.md
 
-## 1. Component Structure & Naming
+Use these files before introducing new abstractions or style changes.
+
+## 2. Component Structure & Naming
 
 ### Component Basics
 
-- **Component Naming**: Use PascalCase; file name must match exported component
-- **Props Destructuring**: Apply destructuring of props only inside the components, not in the incoming prop parameter definition
-- **Component Declaration**: For client components use `const ExampleComponent = () => { ... }` pattern; avoid `React.FC` unless children typing is explicitly needed; for server components, use `export default function ExampleComponent() { ... }`
-- **Props Interface**: Define `interface ExampleComponentProps { ... }` for props typing without React.FC
+- **Component Naming**: Use PascalCase; file name MUST match exported component name.
+- **Props Destructuring**: Destructure props inside the component body, not in function parameters.
+- **Client Component Declaration**: Prefer `const ExampleComponent = (props: ExampleComponentProps) => { ... }`; avoid `React.FC` unless children typing is required.
+- **Server Component Declaration**: Use function declarations. In App Router route files, use default export when required by Next.js conventions.
+- **Props Typing**: Define explicit props types (`type` or `interface`) and avoid implicit `any`.
 
-### 2. Component Creation & Management
+## 3. Component Creation & Management
 
-- **Component Reusability**: Frequently consider creating new components, but always check the **UI Components** folder first to avoid useless duplicates or rigidity
-- **Props Abstraction**: When creating a component, avoid passing entire object types as props until necessary - maintain abstraction
-- **Core Components Modification**: Modifications to already created components are permitted up to a certain degree of change - big changes must be discussed and agreed upon first
-- **Modification Tracking**: Modifications to **UI Components** already present should be briefly tracked within the file of **UI Components changes**
-- **Pattern Adherence**: Follow patterns specified in `instruction/core-components/patterns-instructions.md` when working with core components
+- **Reuse First**: Check existing UI components before creating new ones.
+- **Props Abstraction**: Prefer focused props over passing full domain objects.
+- **Core Component Scope**: Small/medium edits are allowed; major behavior or API changes must be explicitly agreed first.
+- **Change Tracking**: If modifying existing UI core components, add a short note to the UI components changes file.
+- **Pattern Adherence**: Follow the repository core component patterns when present.
 
-### 3. Component Patterns
+## 4. Component Patterns
 
-- **Dual-Purpose Components**: Reuse same components for visualization and editing actions when possible (e.g., a `UserCard` could contain a button that activates fields for editing)
-- **Complex State Management**: For data state management of multiple actions (delete, modify, archive) belonging to the same client component, use the `useReducer` hook instead of multiple `useState` hooks
-- **useTransition for UX**: Use `useTransition` for state updates that may take time into client components, to keep the UI responsive - specially for routing updates
+- **Dual-Purpose Components**: Reuse components for view/edit flows when it keeps API clean.
+- **Complex State Management**: Prefer `useReducer` for multi-action workflows (delete/modify/archive) in a single client component.
+- **Responsive UX**: Use `useTransition` for potentially expensive state updates (especially routing-driven UI updates).
 
-## 4. UX/UI Standards
+## 5. UX/UI Standards
 
 ### Accessibility & Design
 
-- **Accessibility**: Ensure interactive elements are keyboard-accessible and labeled (use `aria-*` attributes as needed)
-- **Responsive Design**: Ensure components have responsive design
+- **Accessibility**: Interactive elements MUST be keyboard accessible and labeled (`aria-*` where needed).
+- **Responsive Design**: Components MUST behave correctly across common breakpoints.
+- **Simplicity First**: Prefer minimal UX that satisfies the requirement; avoid speculative complexity.
 
-## 5. Project Libraries
+## 6. Project Libraries
 
 ### Core Libraries
 
-- **Zustand**: For state management
-- **React Hook Form**: For form handling
-- **Zod**: For data validation
-- **Nuqs**: For syncing state with the URL
-- **Tanstack Query**: For data fetching and caching
-- **Next-Intl**: For internationalization
-- **next-themes**: For theme management (light/dark/system)
+- **Zustand**: State management
+- **React Hook Form**: Form handling
+- **Zod**: Data validation
+- **Nuqs**: URL state sync
+- **TanStack Query**: Data fetching/caching
+- **Next-Intl**: Internationalization
+- **next-themes**: Theme management
 
-## 6. Global Directory Structure & Conventions
+Do not introduce alternatives without a clear task-driven reason.
+
+## 7. Global Directory Structure & Conventions
 
 ### Global Directory Mapping
 
@@ -66,8 +81,109 @@ tools: ["context7/*"]
 - **`@/hooks/*`**: Reusable client-side custom hooks
 - **`@/types/*`**: Global TypeScript definitions and interfaces
 
-### 7. Code Quality & Best Practices
+Follow this mapping when creating new files.
+
+## 8. Patterns & Conventions
+
+This section covers specific patterns and conventions for common UI interactions and component compositions.
+
+### 8.1 Client Component Wrapper Pattern
+
+This pattern helps maintain clear separation of concerns between server and client components. Instead of converting a server component into a client component (which would mix data fetching, state, and UI logic), you wrap the server component with a client component that handles state and UI interactions.
+
+**Problem:**
+If you turn a server component into a client component to add interactivity (e.g., dismiss, toggle), it now handles more than just data fetching—it also manages state and UI rendering, losing the benefits of server components.
+
+**Solution:**
+Create a client component wrapper that receives the server component as a child and manages the interactive logic, while the server component remains focused on data fetching.
+
+**Example:**
+
+```jsx
+"use client";
+import { useState } from "react";
+
+function ClientWrapper(props) {
+  const { children } = props;
+  const [visible, setVisible] = useState(true);
+
+  if (!visible) return null;
+
+  return (
+    <div>
+      {children}
+      <button onClick={() => setVisible(false)}>Dismiss</button>
+    </div>
+  );
+}
+
+// Usage in a page:
+function Page() {
+  return (
+    <ClientWrapper>
+      <ServerComponent />
+    </ClientWrapper>
+  );
+}
+```
+
+### 8.2 Pattern "Show More" (Server/Client Composition)
+
+**Compositional approach for "Show More"**:
+
+- Keep the component that performs data fetching (e.g., `CategoryList`) as a pure server component, responsible only for retrieving data.
+- Implement the interaction logic (e.g., show/hide more items) in a reusable client component (e.g., `ShowMore`), which receives the children from the server component.
+- The client component manages the state (e.g., expanded/collapsed) and the interactive UI, using React.Children to manipulate the children.
+- Usage example:
+
+```jsx
+// Server component
+async function CategoryList() {
+  const categories = await getCategories();
+  return (
+    <ShowMore initial={5}>
+      {categories.map((category) => (
+        <div key={category.id}>{category.name}</div>
+      ))}
+    </ShowMore>
+  );
+}
+
+// Client component (ShowMore)
+("use client");
+import { useState, Children } from "react";
+
+export default function ShowMore(props) {
+  const { children, initial = 5 } = props;
+  const [expanded, setExpanded] = useState(false);
+  const items = expanded
+    ? children
+    : Children.toArray(children).slice(0, initial);
+  const remaining = Children.count(children) - initial;
+  return (
+    <div>
+      <div>{items}</div>
+      {remaining > 0 && (
+        <button onClick={() => setExpanded(!expanded)}>
+          {expanded ? "Show Less" : `Show More (${remaining})`}
+        </button>
+      )}
+    </div>
+  );
+}
+```
+
+## 9. Code Quality & Delivery Checklist
+
+Before finalizing changes, verify:
+
+- Build/lint/type expectations from repository instructions are respected.
+- No unnecessary files, abstractions, or visual redesign were introduced.
+- Accessibility and responsive behavior are preserved.
+- New code follows naming, typing, and folder conventions.
+- If UI core components changed, the change log file is updated.
 
 ## Context 7 MCP
 
-For anything not explicitly covered in these guidelines or in the message sent by the user, refer to the **Context7 MCP** documentation for best practices and standards. When in doubt, choose the simplest solution that complies with Context 7 MCP principles.
+For anything not explicitly covered here or in task instructions, use Context7 documentation.
+When in doubt, choose the simplest compliant solution and avoid overengineering.
