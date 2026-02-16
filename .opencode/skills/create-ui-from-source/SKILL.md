@@ -1,3 +1,8 @@
+---
+name: create-ui-from-source
+description: Build a Next.js page from Figma or spec inputs
+---
+
 # Create Page from Figma
 
 ## Task

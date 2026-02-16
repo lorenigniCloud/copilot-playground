@@ -1,3 +1,8 @@
+---
+name: css-typography-style-unification-guidelines
+description: Normalize and reuse global typography CSS classes safely
+---
+
 # CSS Typography Style Unification Guidelines
 
 ## Task

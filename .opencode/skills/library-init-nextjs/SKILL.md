@@ -1,3 +1,8 @@
+---
+name: library-init-nextjs
+description: Bootstrap core libraries in a Next.js App Router project
+---
+
 # Core Library Initialization (Next.js)
 
 ## Goal

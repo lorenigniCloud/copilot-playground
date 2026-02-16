@@ -1,3 +1,8 @@
+---
+name: react-next-guidelines
+description: Enforce React and Next.js development standards and conventions
+---
+
 # React & Next.js Development Standards
 
 ## Priority order (apply in this order)
