@@ -52,10 +52,15 @@ Supported source inputs (in priority order):
    - **Padding**: Handle page-level padding in the `page.tsx` wrapper (e.g., `p-6` or `p-[120px]`), NOT inside reusable components.
    - **Sizing**: Components should fill their container (`w-full`, `h-full`). Define widths/grids in the page layout.
    - **Spacing**: Use flex/grid gaps in `page.tsx` to separate components.
-6. **Behavior Mapping (when PRD/spec is provided)**:
+6. **Loading & Skeleton Requirements**:
+   - For every new route, create `loading.tsx` at the same segment level as `page.tsx` if it does not already exist.
+   - For every newly created significant visual block/component rendered by the page, add a corresponding skeleton in that route-level `loading.tsx`.
+   - For incremental page updates, keep `loading.tsx` aligned with current UI composition (add/remove/adjust skeleton blocks as needed).
+   - Keep skeleton structure faithful to the page hierarchy; avoid generic placeholders that do not reflect real layout.
+7. **Behavior Mapping (when PRD/spec is provided)**:
    - Convert requirements into concrete UI states (empty/loading/error/success) only if explicitly required by the source.
    - Implement only the minimum interaction scope requested; avoid speculative features.
-7. **Implementation**: Generate the `.tsx` file.
+8. **Implementation**: Generate the `.tsx` file(s) required by the route-level change, including `loading.tsx` creation/update when applicable.
 
 ## Decision Rules (No Figma Scenario)
 
@@ -80,6 +85,7 @@ When returning the result, always provide:
   - Figma node(s)/URL if present
   - PRD/spec sections used (if present)
 - **Step 2**: List any new CSS classes added to `globals.css` (if any).
-- **Step 3**: The complete code for the new page.
+- **Step 3**: `loading.tsx` status at the same route level (`created`, `updated`, or `no change`) and what skeleton blocks were aligned.
+- **Step 4**: The complete code for the new page.
 
 If no new global typography classes are needed, explicitly state: `No new classes added to globals.css`.

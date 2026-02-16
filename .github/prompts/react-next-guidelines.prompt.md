@@ -33,6 +33,7 @@ Use these files before introducing new abstractions or style changes.
 - **Client Component Declaration**: Prefer `const ExampleComponent = (props: ExampleComponentProps) => { ... }`; avoid `React.FC` unless children typing is required.
 - **Server Component Declaration**: Use function declarations. In App Router route files, use default export when required by Next.js conventions.
 - **Props Typing**: Define explicit props types (`type` or `interface`) and avoid implicit `any`.
+- **Readonly Props**: Use `Readonly` utility type for props to prevent unintended mutations
 
 ## 3. Component Creation & Management
 
@@ -181,6 +182,9 @@ Before finalizing changes, verify:
 - No unnecessary files, abstractions, or visual redesign were introduced.
 - Accessibility and responsive behavior are preserved.
 - New code follows naming, typing, and folder conventions.
+- For every route touched, `loading.tsx` exists at the same segment level as `page.tsx`.
+- For every newly introduced significant visual component/block in a route, a corresponding skeleton exists in that route-level `loading.tsx`.
+- On incremental updates, route-level skeletons are updated to stay structurally aligned with the current page composition.
 - If UI core components changed, the change log file is updated.
 
 ## Context 7 MCP
