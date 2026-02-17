@@ -1,6 +1,6 @@
 ---
 name: css-typography-style-unification-guidelines
-description: Normalize and reuse global typography CSS classes safely
+description: Normalize, deduplicate, and safely reuse global typography CSS classes in app/globals.css. Use when mapping Figma or raw text styles to reusable text classes in React/Next.js components.
 ---
 
 # CSS Typography Style Unification Guidelines

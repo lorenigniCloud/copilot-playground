@@ -1,6 +1,6 @@
 ---
 name: react-next-guidelines
-description: Enforce React and Next.js development standards and conventions
+description: Enforce React and Next.js standards for App Router, component structure, accessibility, and route loading parity. Use when implementing or refactoring React/Next.js UI and route files.
 ---
 
 # React & Next.js Development Standards
@@ -18,8 +18,7 @@ When rules conflict, follow the highest-priority source.
 
 - UI Components: `components/ui`
 - UI Components changes markdown: `components/ui/changes.md`
-- Typography Style Unification Prompt: `.opencode/prompts/css-typography-style-unification-guidelines.md`
-- Library Initialization Prompt: `.opencode/prompts/library-init-nextjs.md`
+- Typography style reference skill: `css-typography-style-unification-guidelines`
 
 Use these files before introducing new abstractions or style changes.
 
@@ -138,7 +137,7 @@ async function CategoryList() {
 }
 
 // Client component (ShowMore)
-"use client";
+("use client");
 import { useState, Children } from "react";
 
 export default function ShowMore(props) {
